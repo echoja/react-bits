@@ -41,7 +41,8 @@ const SWATCH_PRESETS = [
   '#EC4899', '#F43F5E', '#ffffff', '#94a3b8', '#000000',
 ];
 
-export default function PreviewColorPickerCustom({ title, color, onChange }) {
+export default function PreviewColorPickerCustom({ title, color, onChange, setColor }) {
+  const handleChange = onChange ?? setColor;
   const [hsv, setHsv] = useState(() => {
     if (color && color.length >= 7) return hexToHsv(color);
     return { h: 270, s: 0.65, v: 0.97 };
@@ -64,8 +65,8 @@ export default function PreviewColorPickerCustom({ title, color, onChange }) {
   const emitColor = useCallback((h, s, v) => {
     const hex = hsvToHex(h, s, v);
     setTextVal(hex);
-    onChange?.(hex);
-  }, [onChange]);
+    handleChange?.(hex);
+  }, [handleChange]);
 
   // Close on outside click
   useEffect(() => {
@@ -126,7 +127,7 @@ export default function PreviewColorPickerCustom({ title, color, onChange }) {
     if (/^#[0-9a-fA-F]{6}$/.test(val)) {
       const next = hexToHsv(val);
       setHsv(next);
-      onChange?.(val);
+      handleChange?.(val);
     }
   };
 
@@ -229,7 +230,7 @@ export default function PreviewColorPickerCustom({ title, color, onChange }) {
                   const next = hexToHsv(c);
                   setHsv(next);
                   setTextVal(c);
-                  onChange?.(c);
+                  handleChange?.(c);
                 }}
                 style={{
                   width: 20, height: 20,
